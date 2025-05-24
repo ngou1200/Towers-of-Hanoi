@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Towers of Hanoi</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Towers of Hanoi</h1>
+            <p class="subtitle">Move all disks to the rightmost tower</p>
+        </header>
+
+        <div class="game-controls">
+            <div class="control-group">
+                <label for="disk-count">Number of Disks:</label>
+                <select id="disk-count">
+                    <option value="3" selected>3 Disks</option>
+                    <option value="4">4 Disks</option>
+                    <option value="5">5 Disks</option>
+                    <option value="6">6 Disks</option>
+                    <option value="7">7 Disks</option>
+                    <option value="8">8 Disks</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label for="theme-select">Theme:</label>
+                <select id="theme-select">
+                    <option value="classic" selected>Classic</option>
+                    <option value="dark">Dark Mode</option>
+                    <option value="neon">Neon</option>
+                    <option value="nature">Nature</option>
+                    <option value="space">Space</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="game-mode">Mode:</label>
+                <select id="game-mode">
+                    <option value="single" selected>Single Player</option>
+                    <option value="multiplayer">Multiplayer</option>
+                </select>
+            </div>
+            
+            <button id="new-game-btn" class="btn">New Game</button>
+            <button id="reset-btn" class="btn">Reset</button>
+            <button id="undo-btn" class="btn undo-btn">Undo</button>
+            <button id="solve-btn" class="btn solve-btn">Auto Solve</button>
+            <button id="save-btn" class="btn save-btn">Save Game</button>
+            <button id="load-btn" class="btn load-btn">Load Game</button>
+        </div>
+
+        <div class="game-stats">
+            <div class="stat-item">
+                <span class="stat-label">Player:</span>
+                <span id="current-player">Player 1</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Moves:</span>
+                <span id="move-count">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Time:</span>
+                <span id="timer">00:00</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Minimum Moves:</span>
+                <span id="min-moves">7</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Score:</span>
+                <span id="score">0</span>
+            </div>
+        </div>
+
+        <div class="game-board">
+            <div class="tower" id="tower-1">
+                <div class="tower-label">Tower A</div>
+                <div class="tower-pole"></div>
+                <div class="tower-base"></div>
+                <div class="disk-container" data-tower="1"></div>
+            </div>
+            
+            <div class="tower" id="tower-2">
+                <div class="tower-label">Tower B</div>
+                <div class="tower-pole"></div>
+                <div class="tower-base"></div>
+                <div class="disk-container" data-tower="2"></div>
+            </div>
+            
+            <div class="tower" id="tower-3">
+                <div class="tower-label">Tower C</div>
+                <div class="tower-pole"></div>
+                <div class="tower-base"></div>
+                <div class="disk-container" data-tower="3"></div>
+            </div>
+        </div>
+
+        <div class="game-rules">
+            <h3>Rules:</h3>
+            <ul>
+                <li>Move all disks from the left tower to the right tower</li>
+                <li>Only one disk can be moved at a time</li>
+                <li>A larger disk cannot be placed on top of a smaller disk</li>
+                <li>Click on a disk to select it, then click on a tower to move it</li>
+            </ul>
+        </div>
+
+        <div class="win-modal" id="win-modal">
+            <div class="modal-content">
+                <h2>🎉 Congratulations! 🎉</h2>
+                <p id="win-message">You solved the puzzle!</p>
+                <div class="modal-stats">
+                    <p><strong>Player:</strong> <span id="winner-name"></span></p>
+                    <p><strong>Moves:</strong> <span id="final-moves"></span></p>
+                    <p><strong>Time:</strong> <span id="final-time"></span></p>
+                    <p><strong>Efficiency:</strong> <span id="efficiency"></span></p>
+                    <p><strong>Score:</strong> <span id="final-score"></span></p>
+                </div>
+                <div class="achievements" id="achievements-display"></div>
+                <button id="close-modal" class="btn">Play Again</button>
+            </div>
+        </div>
+
+        <div class="achievements-panel" id="achievements-panel">
+            <h3>🏆 Achievements</h3>
+            <div class="achievements-grid" id="achievements-grid"></div>
+            <button id="close-achievements" class="btn">Close</button>
+        </div>
+
+        <div class="save-load-modal" id="save-load-modal">
+            <div class="modal-content">
+                <h3 id="save-load-title">Save Game</h3>
+                <div id="save-slots"></div>
+                <div class="save-actions">
+                    <input type="text" id="save-name" placeholder="Enter save name..." maxlength="20">
+                    <button id="confirm-save" class="btn">Save</button>
+                    <button id="cancel-save" class="btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="multiplayer-panel" id="multiplayer-panel">
+            <div class="player-info">
+                <div class="player-card" id="player1-card">
+                    <h4>Player 1</h4>
+                    <p>Moves: <span id="p1-moves">0</span></p>
+                    <p>Score: <span id="p1-score">0</span></p>
+                </div>
+                <div class="player-card" id="player2-card">
+                    <h4>Player 2</h4>
+                    <p>Moves: <span id="p2-moves">0</span></p>
+                    <p>Score: <span id="p2-score">0</span></p>
+                </div>
+            </div>
+            <button id="switch-turn" class="btn">Switch Turn</button>
+        </div>
+
+        <button id="achievements-btn" class="floating-btn">🏆</button>
+        <div id="gesture-indicator" class="gesture-indicator">
+            <div class="gesture-arrow"></div>
+            <span class="gesture-text">Swipe to move</span>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
